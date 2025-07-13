@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendProjects.LoggerLib", "BackendProjects.LoggerLib\BackendProjects.LoggerLib.csproj", "{B9A52C6F-42A5-48E3-AFFE-B3B05ED21426}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendProjects.LoggerLibSample", "BackendProjects.LoggerLibSample\BackendProjects.LoggerLibSample.csproj", "{1FA78F9A-D632-4981-9EA0-AC16A826BA21}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{B9A52C6F-42A5-48E3-AFFE-B3B05ED21426}.Release|x64.Build.0 = Release|Any CPU
 		{B9A52C6F-42A5-48E3-AFFE-B3B05ED21426}.Release|x86.ActiveCfg = Release|Any CPU
 		{B9A52C6F-42A5-48E3-AFFE-B3B05ED21426}.Release|x86.Build.0 = Release|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Debug|x64.Build.0 = Debug|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Debug|x86.Build.0 = Debug|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Release|x64.ActiveCfg = Release|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Release|x64.Build.0 = Release|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Release|x86.ActiveCfg = Release|Any CPU
+		{1FA78F9A-D632-4981-9EA0-AC16A826BA21}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
