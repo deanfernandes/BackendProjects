@@ -13,10 +13,12 @@ namespace TaskTracker
             {
                 Console.WriteLine("\nTask Tracker");
                 Console.WriteLine("1. View all tasks");
-                Console.WriteLine("2. Add new task");
-                Console.WriteLine("3. Update task");
-                Console.WriteLine("4. Delete task");
-                Console.WriteLine("5. Exit");
+                Console.WriteLine("2. View incomplete tasks");
+                Console.WriteLine("3. View completed tasks");
+                Console.WriteLine("4. Add new task");
+                Console.WriteLine("5. Update task");
+                Console.WriteLine("6. Delete task");
+                Console.WriteLine("7. Exit");
                 Console.Write("Choose an option: ");
 
                 string input = Console.ReadLine();
@@ -24,10 +26,12 @@ namespace TaskTracker
                 switch (input)
                 {
                     case "1": ViewAllTasks(); break;
-                    case "2": AddTask(); break;
-                    case "3": UpdateTask();  break;
-                    case "4": DeleteTask(); break;
-                    case "5": return;
+                    case "2": ReadTasksByCompletion(false); break;
+                    case "3": ReadTasksByCompletion(true); break;
+                    case "4": AddTask(); break;
+                    case "5": UpdateTask();  break;
+                    case "6": DeleteTask(); break;
+                    case "7": return;
                     default: Console.WriteLine("Invalid choice."); break;
                 }
             }
@@ -141,6 +145,22 @@ namespace TaskTracker
             Console.WriteLine("Task deleted.");
         }
 
+        static void ReadTasksByCompletion(bool completed)
+        {
+            using var db = new AppDbContext();
+            var tasks = db.Tasks.Where(t => t.IsCompleted == completed).ToList();
+
+            if (!tasks.Any())
+            {
+                Console.WriteLine(completed ? "No completed tasks." : "No incomplete tasks.");
+                return;
+            }
+
+            foreach (var task in tasks)
+            {
+                Console.WriteLine($"Id: {task.Id}, Title: {task.Title}");
+            }
+        }
     }
 
 }
