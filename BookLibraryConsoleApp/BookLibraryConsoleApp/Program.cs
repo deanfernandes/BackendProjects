@@ -13,7 +13,8 @@ namespace BookLibraryConsoleApp
             var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddUserSecrets<Program>();
+            .AddUserSecrets<Program>()
+            .AddEnvironmentVariables();
 
             Configuration = builder.Build();
 
