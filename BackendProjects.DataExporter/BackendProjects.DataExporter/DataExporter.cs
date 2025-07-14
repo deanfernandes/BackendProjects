@@ -71,4 +71,25 @@ namespace BackendProjects.DataExporter
             };
         }
     }
+
+    public static class DataExporterHelper
+    {
+        public static void ExportToFile<T>(IEnumerable<T> data, params string[] filePaths)
+        {
+            foreach (var filePath in filePaths)
+            {
+                string extension = Path.GetExtension(filePath).TrimStart('.').ToLower();
+                try
+                {
+                    IDataExporter dataExporter = DataExporterFactory.CreateDataExporter(extension);
+                    File.WriteAllText(filePath, dataExporter.Export(data));
+                    Console.WriteLine($"Data exported to {filePath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine(ex);
+                }
+            }
+        }
+    }
 }

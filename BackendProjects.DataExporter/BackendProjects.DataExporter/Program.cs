@@ -21,9 +21,13 @@ namespace BackendProjects.DataExporter
             };
 
             //IDataExporter dataExporter = DataExporterFactory.CreateDataExporter("json");
+            /*
             IDataExporter dataExporter = DataExporterFactory.CreateDataExporter("csv");
             Console.WriteLine(dataExporter.Export<Person>(people));
             Console.WriteLine(dataExporter.Export<Car>(cars));
+            */
+            DataExporterHelper.ExportToFile<Person>(people, "people.json", "people.csv");
+            DataExporterHelper.ExportToFile<Car>(cars, "cars.json", "cars.csv", "cars.xml");
         }
     }
 
