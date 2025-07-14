@@ -45,7 +45,7 @@
 
         public override string ToString()
         {
-            return $"{Color} {Name,-20} ${Price,-6} x{Quantity}";
+            return $"({Color}) {Name,-20} ${Price,-6} x{Quantity}";
         }
     }
 }
