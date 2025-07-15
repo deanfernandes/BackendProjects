@@ -14,18 +14,22 @@ public static class DataSeeder
             return;
         }
 
+        var (hash, salt) = PasswordHelper.HashPassword("admin");
         var admin = new User
         {
             Username = "admin",
-            PasswordHash = PasswordHelper.HashPassword("admin"),
+            PasswordHash = hash,
+            Salt = salt,
             Role = "Admin",
             Email = "admin@gmail.com",
         };
 
+        (hash, salt) = PasswordHelper.HashPassword("password");
         var customer = new User
         {
             Username = "customer",
-            PasswordHash = PasswordHelper.HashPassword("password"),
+            PasswordHash = hash,
+            Salt = salt,
             Role = "Customer",
             Email = "customer@gmail.com",
         };

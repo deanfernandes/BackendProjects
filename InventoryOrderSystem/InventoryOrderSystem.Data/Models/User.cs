@@ -15,7 +15,10 @@ public class User
     [Required]
     public string Role { get; set; } = "Customer"; // "Customer" or "Admin"
 
-    public ICollection<Order> Orders { get; set; } = new List<Order>();
-
     public string? Email { get; set; }
+
+    [Required]
+    public string Salt { get; set; } = string.Empty;
+
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
 }

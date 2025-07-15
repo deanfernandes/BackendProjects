@@ -19,7 +19,10 @@ public class UserRepository(AppDbContext context) : IUserRepository
 
     public async Task AddAsync(User user)
     {
-        user.PasswordHash = PasswordHelper.HashPassword(user.PasswordHash);
+        var (hash, salt) = PasswordHelper.HashPassword(user.PasswordHash);
+        user.PasswordHash = hash;
+        user.Salt = salt;
+
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
     }
@@ -42,7 +45,14 @@ public class UserRepository(AppDbContext context) : IUserRepository
 
     public async Task<User?> AuthenticateAsync(string username, string password)
     {
-        return await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == PasswordHelper.HashPassword(password));
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
+        if (user == null) return null;
+
+        string hashToCheck = PasswordHelper.HashWithSalt(password, user.Salt);
+
+        if (hashToCheck == user.PasswordHash)
+            return user;
+
+        return null;
     }
 }
