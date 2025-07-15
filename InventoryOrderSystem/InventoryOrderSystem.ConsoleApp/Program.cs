@@ -21,23 +21,7 @@ class Program
         await DataSeeder.SeedAsync(context);
 
         var userRepo = new UserRepository(context);
-        User? user = null;
-        while (user == null)
-        {
-            Console.WriteLine("\nLogin to Inventory Order System");
-            Console.Write("Username: ");
-            string username = Console.ReadLine() ?? "";
-
-            Console.Write("Password: ");
-            string password = ReadPassword();
-
-            user = await userRepo.AuthenticateAsync(username, password);
-
-            if (user == null)
-            {
-                Console.WriteLine("Invalid username or password. Try again.");
-            }
-        }
+        User user = await LoginMenu.ShowAsync(userRepo);
 
         Console.WriteLine($"Hello, {user.Username}");
 
@@ -47,7 +31,7 @@ class Program
         }
         else if (user.Role == "Customer")
         {
-            //TODO: customer menu
+            await CustomerMenu.CustomerMenuAsync(user, new ProductRepository(context), new OrderRepository(context));
         }
     }
 

@@ -10,4 +10,5 @@ public interface IOrderRepository
     Task<IEnumerable<Order>> GetByUserIdAsync(int userId);
     Task AddAsync(Order order);
     Task AddOrderWithItemsAsync(Order order, List<OrderItem> items);
+    Task<IEnumerable<Order>> GetOrdersByUserIdAsync(int userId);
 }
