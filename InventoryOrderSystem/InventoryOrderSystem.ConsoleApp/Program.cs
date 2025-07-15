@@ -4,6 +4,7 @@ using InventoryOrderSystem.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using InventoryOrderSystem.Data.Models;
+using InventoryOrderSystem.ConsoleApp.Menus;
 
 class Program
 {
@@ -38,11 +39,11 @@ class Program
             }
         }
 
-        Console.WriteLine($"Hello, {user.Username} ({user.Role})");
+        Console.WriteLine($"Hello, {user.Username}");
 
         if (user.Role == "Admin")
         {
-            //TODO: admin menu
+            await AdminMenu.AdminMenuAsync(user, userRepo);
         }
         else if (user.Role == "Customer")
         {
