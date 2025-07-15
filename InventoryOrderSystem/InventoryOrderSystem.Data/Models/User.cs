@@ -16,4 +16,6 @@ public class User
     public string Role { get; set; } = "Customer"; // "Customer" or "Admin"
 
     public ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public string? Email { get; set; }
 }

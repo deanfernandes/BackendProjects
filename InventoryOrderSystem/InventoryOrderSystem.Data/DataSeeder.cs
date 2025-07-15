@@ -18,14 +18,16 @@ public static class DataSeeder
         {
             Username = "admin",
             PasswordHash = PasswordHelper.HashPassword("admin"),
-            Role = "Admin"
+            Role = "Admin",
+            Email = "admin@gmail.com",
         };
 
         var customer = new User
         {
             Username = "customer",
             PasswordHash = PasswordHelper.HashPassword("password"),
-            Role = "Customer"
+            Role = "Customer",
+            Email = "customer@gmail.com",
         };
 
         var products = new List<Product>

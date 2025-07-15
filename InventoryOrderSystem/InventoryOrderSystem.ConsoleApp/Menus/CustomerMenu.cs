@@ -156,7 +156,7 @@ namespace InventoryOrderSystem.ConsoleApp.Menus
             Console.WriteLine("\n=== Your Order History ===");
             foreach (var order in orders)
             {
-                Console.WriteLine($"Order ID: {order.Id}, Date: {order.CreatedAt}");
+                Console.WriteLine($"Order ID: {order.Id}, Date: {order.OrderDate}");
                 decimal orderTotal = 0;
                 foreach (var item in order.Items)
                 {
