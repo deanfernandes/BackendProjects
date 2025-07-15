@@ -4,14 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventoryOrderSystem.Data.Repositories;
 
-public class ProductRepository : IProductRepository
+public class ProductRepository(AppDbContext context) : IProductRepository
 {
-    private readonly AppDbContext _context;
-
-    public ProductRepository(AppDbContext context)
-    {
-        _context = context;
-    }
+    private readonly AppDbContext _context = context;
 
     public async Task<IEnumerable<Product>> GetAllAsync() =>
         await _context.Products.ToListAsync();

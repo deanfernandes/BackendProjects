@@ -4,14 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventoryOrderSystem.Data.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository(AppDbContext context) : IUserRepository
 {
-    private readonly AppDbContext _context;
-
-    public UserRepository(AppDbContext context)
-    {
-        _context = context;
-    }
+    private readonly AppDbContext _context = context;
 
     public async Task<User?> GetByIdAsync(int id) =>
         await _context.Users.FindAsync(id);
@@ -24,6 +19,7 @@ public class UserRepository : IUserRepository
 
     public async Task AddAsync(User user)
     {
+        user.PasswordHash = PasswordHelper.HashPassword(user.PasswordHash);
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
     }
@@ -42,5 +38,11 @@ public class UserRepository : IUserRepository
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task<User?> AuthenticateAsync(string username, string password)
+    {
+        return await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == PasswordHelper.HashPassword(password));
     }
 }

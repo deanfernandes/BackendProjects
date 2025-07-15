@@ -17,14 +17,14 @@ public static class DataSeeder
         var admin = new User
         {
             Username = "admin",
-            PasswordHash = "admin123", // hash it in production!
+            PasswordHash = PasswordHelper.HashPassword("admin"),
             Role = "Admin"
         };
 
         var customer = new User
         {
             Username = "customer",
-            PasswordHash = "cust123",
+            PasswordHash = PasswordHelper.HashPassword("password"),
             Role = "Customer"
         };
 
