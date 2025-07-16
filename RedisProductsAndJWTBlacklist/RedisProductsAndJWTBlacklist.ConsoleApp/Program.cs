@@ -1,10 +1,14 @@
-﻿using StackExchange.Redis;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
+using static RedisProductsAndJWTBlacklist.ConsoleApp.Program;
 
-namespace RedisJWTBlacklist.ConsoleApp
+namespace RedisProductsAndJWTBlacklist.ConsoleApp
 {
     class Program
     {
@@ -41,10 +45,17 @@ namespace RedisJWTBlacklist.ConsoleApp
 
             const string cacheKey = "products:all";
 
+            List<Product> products;
             if (_db.KeyExists(cacheKey))
             {
                 Console.WriteLine("Retrieved products from Redis cache.");
-                Console.WriteLine(_db.StringGet(cacheKey));
+
+                products = JsonSerializer.Deserialize<List<Product>>(_db.StringGet(cacheKey));
+                Console.WriteLine("Products:");
+                foreach (var p in products)
+                {
+                    Console.WriteLine($"- {p.Name} (${p.Price})");
+                }
                 return;
             }
 
@@ -52,11 +63,35 @@ namespace RedisJWTBlacklist.ConsoleApp
             Console.WriteLine("Fetching products from SQL database...");
             Thread.Sleep(2000); // simulate delay
 
-            string productData = "Product1, Product2, Product3"; // simulate data from DB
-            _db.StringSet(cacheKey, productData, TimeSpan.FromMinutes(5));
+            products = new List<Product>
+            {
+                new Product { Id = "1", Name = "Product1", Price = 10.99m },
+                new Product { Id = "2", Name = "Product2", Price = 14.50m },
+                new Product { Id = "3", Name = "Product3", Price = 9.75m }
+            };
+            string productsJson = JsonSerializer.Serialize<List<Product>>(products);
+            _db.StringSet(cacheKey, productsJson, TimeSpan.FromMinutes(5));
 
             Console.WriteLine("Products fetched from SQL and cached.");
-            Console.WriteLine(productData);
+            Console.WriteLine("Products:");
+            foreach (var p in products)
+            {
+                Console.WriteLine($"- {p.Name} (${p.Price})");
+
+                /*
+                string key = $"product:{p.Id}";
+                var hashEntries = new HashEntry[]
+                {
+                    new HashEntry("Id", p.Id),
+                    new HashEntry("Name", p.Name),
+                    new HashEntry("Price", p.Price.ToString(CultureInfo.InvariantCulture))
+                };
+
+                _db.HashSet(key, hashEntries);
+                _db.KeyExpire("product:1", TimeSpan.FromMinutes(5));
+                */
+            }
+
         }
 
         private static string Login(string username)
@@ -138,5 +173,13 @@ namespace RedisJWTBlacklist.ConsoleApp
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public class Product
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public decimal Price { get; set; }
+        }
+
     }
 }
