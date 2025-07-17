@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using Microsoft.OpenApi;
+using Swashbuckle.AspNetCore;
+//using NSwag.AspNetCore;
 
 class Anime
 {
@@ -70,11 +73,33 @@ class Program
     static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+        //builder.Services.AddOpenApiDocument();
+
         var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            /*
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                options.RoutePrefix = string.Empty;
+            });
+            */
+            //app.UseOpenApi();
+            //app.UseSwaggerUi();
+        }
 
         var animesMapGroup = app.MapGroup("/animes");
         animesMapGroup.MapGet("/", GetAllAnimes);
-        animesMapGroup.MapGet("/{id}", GetAnime);
+        animesMapGroup.MapGet("/{id}", GetAnime)
+        .Produces<AnimeDto>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
         animesMapGroup.MapGet("/watched", GetAllWatchedAnimes);
         animesMapGroup.MapPost("/", CreateAnime);
         animesMapGroup.MapPut("/{id}", UpdateAnime);
@@ -85,49 +110,49 @@ class Program
 
     static IResult GetAllAnimes()
     {
-        return Results.Ok(animes.Select(a => new AnimeDto(a)));
+        return TypedResults.Ok<IEnumerable<AnimeDto>>(animes.Select(a => new AnimeDto(a)));
     }
 
     static IResult GetAnime(int id)
     {
         var anime = animes.Find(a => a.Id == id);
         if (anime is null)
-            return Results.NotFound();
+            return TypedResults.NotFound();
 
-        return Results.Ok(new AnimeDto(anime));
+        return TypedResults.Ok<AnimeDto>(new AnimeDto(anime));
     }
 
     static IResult GetAllWatchedAnimes()
     {
-        return Results.Ok(animes.Where(a => a.Watched).Select(a => new AnimeDto(a)));
+        return TypedResults.Ok<IEnumerable<AnimeDto>>(animes.Where(a => a.Watched).Select(a => new AnimeDto(a)));
     }
 
     static IResult CreateAnime(CreateAnimeDto createAnimeDto)
     {
         var anime = new Anime(animes.Count + 1, createAnimeDto.Title);
         animes.Add(anime);
-        return Results.Created($"/animes/{anime.Id}", new AnimeDto(anime));
+        return TypedResults.Created<AnimeDto>($"/animes/{anime.Id}", new AnimeDto(anime));
     }
 
     static IResult UpdateAnime(int id, UpdateAnimeDto updateAnimeDto)
     {
         var a = animes.Find(a => a.Id == id);
         if (a is null)
-            return Results.NotFound();
+            return TypedResults.NotFound();
 
         a.Title = updateAnimeDto.Title;
         a.Watched = updateAnimeDto.Watched;
 
-        return Results.NoContent();
+        return TypedResults.NoContent();
     }
 
     static IResult DeleteAnime(int id)
     {
         var anime = animes.Find(a => a.Id == id);
         if (anime is null)
-            return Results.NotFound();
+            return TypedResults.NotFound();
 
         animes.Remove(anime);
-        return Results.NoContent();
+        return TypedResults.NoContent();
     }
 }
