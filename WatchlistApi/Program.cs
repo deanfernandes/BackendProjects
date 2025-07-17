@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore;
 //using NSwag.AspNetCore;
@@ -104,6 +106,19 @@ class Program
         animesMapGroup.MapPost("/", CreateAnime);
         animesMapGroup.MapPut("/{id}", UpdateAnime);
         animesMapGroup.MapDelete("/{id}", DeleteAnime);
+
+        app.Use(async (context, next) =>
+        {
+            Console.WriteLine($"1st {context.Request.Method} {context.Request.Path}");
+            await next(context);
+        });
+        //app.UseHttpsRedirection();
+        /*var options = new RewriteOptions().AddRedirectToHttps();
+        app.UseRewriter(options);*/
+        app.UseRewriter(new RewriteOptions()
+            .AddRedirect(@"^movies$", "animes")
+            .AddRedirect(@"^movies/$", "animes/")
+            .AddRedirect(@"^movies/(.*)", "animes/$1"));
 
         app.Run();
     }
