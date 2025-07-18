@@ -74,16 +74,59 @@ public class AnimeController : ControllerBase
     };
 
     [HttpGet]
-    public ActionResult<AnimeQuote> GetQuote()
+    public ActionResult<AnimeQuote> GetQuote([FromQuery] string? anime = null, [FromQuery] string? character = null)
     {
+        var filteredQuotes = _animeQuotes.AsEnumerable();
+        if (!string.IsNullOrWhiteSpace(anime))
+        {
+            filteredQuotes = filteredQuotes.Where(q => q.Anime.Equals(anime, StringComparison.OrdinalIgnoreCase));
+        }
+        if (!string.IsNullOrWhiteSpace(character))
+        {
+            filteredQuotes = filteredQuotes
+                .Where(q => q.Character.Equals(character, StringComparison.OrdinalIgnoreCase));
+        }
+        var quotesList = filteredQuotes.ToList();
+
+        if (!quotesList.Any())
+        {
+            return NotFound("No matching quotes found.");
+        }
+
         var random = new Random();
-        AnimeQuote randomQuote = _animeQuotes[random.Next(_animeQuotes.Count)];
+        var randomQuote = quotesList[random.Next(quotesList.Count)];
+
         return Ok(randomQuote);
     }
+
 
     [HttpGet("all")]
     public ActionResult<List<AnimeQuote>> GetAll()
     {
         return Ok(_animeQuotes);
+    }
+
+    [HttpGet("animes")]
+    public ActionResult<List<string>> GetAnimes()
+    {
+        var distinctAnimes = _animeQuotes
+            .Select(q => q.Anime)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(name => name)
+            .ToList();
+
+        return Ok(distinctAnimes);
+    }
+
+    [HttpGet("characters")]
+    public ActionResult<List<string>> GetCharacters()
+    {
+        var distinctCharacters = _animeQuotes
+            .Select(q => q.Character)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(name => name)
+            .ToList();
+
+        return Ok(distinctCharacters);
     }
 }
