@@ -11,24 +11,34 @@ namespace ECommerceApi.Controllers;
 public class ProductsController : ControllerBase
 {
     private readonly IProductRepository _productRepository;
+    private readonly IRedisRepository _redisRepository;
 
-    public ProductsController(IProductRepository productRepository)
+    public ProductsController(IProductRepository productRepository, IRedisRepository redisRepository)
     {
         _productRepository = productRepository;
+        _redisRepository = redisRepository;
     }
 
     [HttpGet]
     //[AllowAnonymous]
     public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
     {
-        //TODO: cache redis
+        if (await _redisRepository.ProductsExistAsync())
+        {
+            Console.WriteLine("getting products from cache (redis)");
+            var cachedProducts = await _redisRepository.GetProductsAsync();
+            return Ok(cachedProducts);
+        }
 
+        Console.WriteLine("getting products from primary db (sql)");
         var products = await _productRepository.GetAllAsync();
+        Console.WriteLine("adding products to cache (redis)");
+        _redisRepository.SetProductsAsync(products.ToList<Product>(), TimeSpan.FromMinutes(5));
         return Ok(products);
     }
 
     [HttpGet("{id}")]
-    [AllowAnonymous]
+    //[AllowAnonymous]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
         var product = await _productRepository.GetByIdAsync(id);

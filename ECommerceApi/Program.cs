@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ECommerceApi.Services;
+using StackExchange.Redis;
 
 namespace ECommerceApi {
     class Program {
@@ -37,6 +38,12 @@ namespace ECommerceApi {
             });
 
             builder.Services.AddSingleton<IPasswordService, PasswordService>();
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+            {
+                return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis"));
+            });
+            builder.Services.AddScoped<IRedisRepository, RedisRepository>();
 
             var app = builder.Build();
 
