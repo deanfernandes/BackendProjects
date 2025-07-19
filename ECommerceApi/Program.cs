@@ -18,6 +18,8 @@ namespace ECommerceApi {
 
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -41,7 +43,8 @@ namespace ECommerceApi {
             using (var scope = app.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                AppDbContext.Seed(context);
+                var passwordService = scope.ServiceProvider.GetRequiredService<IPasswordService>();
+                AppDbContext.Seed(context, passwordService);
             }
 
             if (app.Environment.IsDevelopment())
