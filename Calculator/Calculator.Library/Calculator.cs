@@ -19,7 +19,7 @@ namespace Calculator.Library
 
         public int Divide(int a, int b)
         {
-            if (a == 0)
+            if (b == 0)
                 throw new DivideByZeroException();
 
             return a / b;

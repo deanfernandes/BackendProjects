@@ -1,5 +1,6 @@
 using Xunit;
 using Calculator.Library;
+using FluentAssertions;
 
 namespace Calculator.Tests
 {
@@ -10,11 +11,15 @@ namespace Calculator.Tests
         [Xunit.TraitAttribute("Type", "Add")]
         public void Add_GivenTwoIntegers_ReturnsCorrectSum()
         {
+            //Arrange
             var c = new Calculator.Library.Calculator();
 
+            //Act
             int result = c.Add(10, 5);
 
-            Xunit.Assert.Equal(15, result);
+            //Assert
+            //Xunit.Assert.Equal(15, result);
+            result.Should().Be(15);
         }
 
         [Xunit.TheoryAttribute]
@@ -28,7 +33,8 @@ namespace Calculator.Tests
 
             int result = c.Subtract(a, b);
 
-            Xunit.Assert.Equal(expected, result);
+            //Xunit.Assert.Equal(expected, result);
+            result.Should().Be(expected);
         }
 
         [Theory]
@@ -42,7 +48,8 @@ namespace Calculator.Tests
 
             int result = c.Multiply(a, b);
 
-            Assert.Equal(expected, result);
+            //Assert.Equal(expected, result);
+            result.Should().Be(expected);
         }
 
         [Fact]
@@ -54,7 +61,8 @@ namespace Calculator.Tests
 
             int result = c.Divide(10, 5);
 
-            Assert.Equal(2, result);
+            //Assert.Equal(2, result);
+            result.Should().Be(2);
         }
 
         [Fact]
@@ -64,7 +72,11 @@ namespace Calculator.Tests
         {
             var c = new Calculator.Library.Calculator();
 
-            Assert.Throws<DivideByZeroException>(() => c.Divide(10, 0));
+            //Assert.Throws<DivideByZeroException>(() => c.Divide(10, 0));
+            FluentAssertions.FluentActions.Invoking(() => c.Divide(10, 0))
+            .Should()
+            .Throw<DivideByZeroException>()
+            .WithMessage("Attempted to divide by zero.");
         }
     }
 }
