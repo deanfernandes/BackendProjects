@@ -15,7 +15,7 @@ builder.Services.AddSingleton<IAnimeService>(sp =>
     return new AnimeService(database);
 });
 
-builder.Services.AddSingleton<SongService>(sp =>
+builder.Services.AddSingleton<ISongService>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
     var connectionString = config.GetConnectionString("MongoDb");
@@ -34,7 +34,7 @@ using (var scope = app.Services.CreateScope())
     var animeService = scope.ServiceProvider.GetRequiredService<IAnimeService>();
     await animeService.SeedQuotesAsync();
 
-    var songService = scope.ServiceProvider.GetRequiredService<SongService>();
+    var songService = scope.ServiceProvider.GetRequiredService<ISongService>();
     await songService.SeedQuotesAsync();
 }
 

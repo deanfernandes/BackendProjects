@@ -8,17 +8,17 @@ namespace RandomQuotesApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class MusicController : ControllerBase
+public class SongController : ControllerBase
 {
-    private readonly SongService _songService;
+    private readonly ISongService _songService;
 
-    public MusicController(SongService songService)
+    public SongController(ISongService songService)
     {
         _songService = songService;
     }
 
     [HttpGet]
-    public async Task<ActionResult<SongQuote>> GetQuote([FromQuery] string? artist = null, [FromQuery] string? album = null, [FromQuery] string? song = null)
+    public async Task<ActionResult<SongQuoteDto>> GetQuoteAsync([FromQuery] string? artist = null, [FromQuery] string? album = null, [FromQuery] string? song = null)
     {
         var randomQuote = await _songService.GetRandomAsync(artist, album, song);
 
@@ -29,7 +29,7 @@ public class MusicController : ControllerBase
     }
 
     [HttpGet("all")]
-    public async Task<ActionResult<List<SongQuoteDto>>> GetAll()
+    public async Task<ActionResult<List<SongQuoteDto>>> GetAllAsync()
     {
         var allQuotes = await _songService.GetAllAsync();
         var dtoQuotes = allQuotes.Select(q => q.ToDto()).ToList();
@@ -38,21 +38,21 @@ public class MusicController : ControllerBase
     }
 
     [HttpGet("artists")]
-    public async Task<ActionResult<List<string>>> GetArtists()
+    public async Task<ActionResult<List<string>>> GetArtistsAsync()
     {
         var artists = await _songService.GetDistinctArtistsAsync();
         return Ok(artists);
     }
 
     [HttpGet("albums")]
-    public async Task<ActionResult<List<string>>> GetAlbums()
+    public async Task<ActionResult<List<string>>> GetAlbumsAsync()
     {
         var albums = await _songService.GetDistinctAlbumsAsync();
         return Ok(albums);
     }
 
     [HttpGet("songs")]
-    public async Task<ActionResult<List<string>>> GetSongs()
+    public async Task<ActionResult<List<string>>> GetSongsAsync()
     {
         var songs = await _songService.GetDistinctSongsAsync();
         return Ok(songs);
