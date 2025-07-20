@@ -4,6 +4,8 @@ VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomQuotesApi", "RandomQuotesApi.csproj", "{4D38AAFA-4466-E4F6-DDE7-9036EB9C776C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomQuotesApi.Tests", "..\RandomQuotesApi.Tests\RandomQuotesApi.Tests.csproj", "{737897A2-F3F2-4854-A89E-A299ECEFCB0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,6 +16,10 @@ Global
 		{4D38AAFA-4466-E4F6-DDE7-9036EB9C776C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D38AAFA-4466-E4F6-DDE7-9036EB9C776C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D38AAFA-4466-E4F6-DDE7-9036EB9C776C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{737897A2-F3F2-4854-A89E-A299ECEFCB0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{737897A2-F3F2-4854-A89E-A299ECEFCB0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{737897A2-F3F2-4854-A89E-A299ECEFCB0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{737897A2-F3F2-4854-A89E-A299ECEFCB0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

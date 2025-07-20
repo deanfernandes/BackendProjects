@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddSingleton<AnimeService>(sp =>
+builder.Services.AddSingleton<IAnimeService>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
     var mongoClient = new MongoClient(config.GetConnectionString("MongoDb"));
@@ -31,7 +31,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var animeService = scope.ServiceProvider.GetRequiredService<AnimeService>();
+    var animeService = scope.ServiceProvider.GetRequiredService<IAnimeService>();
     await animeService.SeedQuotesAsync();
 
     var songService = scope.ServiceProvider.GetRequiredService<SongService>();

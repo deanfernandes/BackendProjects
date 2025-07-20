@@ -3,7 +3,7 @@ using RandomQuotesApi.Models;
 
 namespace RandomQuotesApi.Services;
 
-public class AnimeService
+public class AnimeService : IAnimeService
 {
     private readonly IMongoCollection<AnimeQuote> _animeQuotes;
 
