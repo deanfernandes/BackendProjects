@@ -39,5 +39,15 @@ namespace ECommerceApi.Repositories
         {
             return await _db.KeyExistsAsync(ProductsKey);
         }
+
+        public async Task BlacklistTokenAsync(string token, TimeSpan expiry)
+        {
+            await _db.StringSetAsync($"blacklist:{token}", "blacklisted", expiry);
+        }
+
+        public async Task<bool> IsTokenBlacklistedAsync(string token)
+        {
+            return await _db.KeyExistsAsync($"blacklist:{token}");
+        }
     }
 }

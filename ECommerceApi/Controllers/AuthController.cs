@@ -17,12 +17,14 @@ namespace ECommerceApi.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
         private readonly IPasswordService _passwordService;
+        private readonly IRedisRepository _redisRepository;
 
-        public AuthController(IUserRepository userRepository, IConfiguration configuration, IPasswordService passwordService)
+        public AuthController(IUserRepository userRepository, IConfiguration configuration, IPasswordService passwordService, IRedisRepository redisRepository)
         {
             _userRepository = userRepository;
             _configuration = configuration;
             _passwordService = passwordService;
+            _redisRepository = redisRepository;
         }
 
         [HttpPost("login")]
@@ -45,11 +47,28 @@ namespace ECommerceApi.Controllers
         }
 
         [HttpPost("logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            //TODO: blacklist redis
+            var authHeader = Request.Headers["Authorization"].ToString();
 
-            return Ok("Logged out.");
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                return BadRequest("No token provided");
+
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+            var expiry = jwtToken.ValidTo - DateTime.UtcNow;
+
+            if (expiry <= TimeSpan.Zero)
+                return BadRequest("Token already expired");
+
+            if(await _redisRepository.IsTokenBlacklistedAsync(token))
+                return BadRequest("Already logged out");
+
+            await _redisRepository.BlacklistTokenAsync(token, expiry);
+
+            return Ok("Logged out");
         }
 
         private string GenerateJwtToken(User user)
@@ -67,7 +86,7 @@ namespace ECommerceApi.Controllers
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(2),
+                expires: DateTime.UtcNow.AddMinutes(30),
                 signingCredentials: creds
             );
 

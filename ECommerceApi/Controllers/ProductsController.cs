@@ -20,8 +20,8 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    //[AllowAnonymous]
-    public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+    [AllowAnonymous]
+    public async Task<ActionResult<IEnumerable<Product>>> GetProductsAsync()
     {
         if (await _redisRepository.ProductsExistAsync())
         {
@@ -39,7 +39,7 @@ public class ProductsController : ControllerBase
 
     [HttpGet("{id}")]
     //[AllowAnonymous]
-    public async Task<ActionResult<Product>> GetProduct(int id)
+    public async Task<ActionResult<Product>> GetProductAsync(int id)
     {
         var product = await _productRepository.GetByIdAsync(id);
         if (product == null) return NotFound();
@@ -47,14 +47,14 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Product>> CreateProduct(Product product)
+    public async Task<ActionResult<Product>> CreateProductAsync(Product product)
     {
         await _productRepository.AddAsync(product);
-        return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+        return CreatedAtAction(nameof(GetProductAsync), new { id = product.Id }, product);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProduct(int id, Product product)
+    public async Task<IActionResult> UpdateProductAsync(int id, Product product)
     {
         if (id != product.Id) return BadRequest();
 
@@ -72,7 +72,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProduct(int id)
+    public async Task<IActionResult> DeleteProductAsync(int id)
     {
         var product = await _productRepository.GetByIdAsync(id);
         if (product == null) return NotFound();
